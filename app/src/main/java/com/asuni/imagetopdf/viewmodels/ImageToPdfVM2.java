@@ -1,45 +1,55 @@
 package com.asuni.imagetopdf.viewmodels;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 
 import android.content.Intent;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.provider.MediaStore;
 
+import android.util.Base64;
 import android.view.View;
 
-import com.asuni.imagetopdf.adapters.DocumentCommon;
 
-import com.asuni.imagetopdf.views.ImageToPdf;
 import com.asuni.imagetopdf.R;
+import com.asuni.imagetopdf.aa.DocumentCamera;
+import com.asuni.imagetopdf.adapters.DocumentCommon;
+import com.asuni.imagetopdf.views.ImageToPdf;
 import com.google.android.material.snackbar.Snackbar;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Set;
 
-public class ImageToPdfVM {
+public class ImageToPdfVM2 {
 
     ImageToPdf imageToPdf;
 
-    Snackbar snackbar;
+    public Snackbar snackbar;
 
-    public ImageToPdfVM(ImageToPdf imageToPdf){
+    public ImageToPdfVM2(ImageToPdf imageToPdf){
+
         this.imageToPdf=imageToPdf;
 
         snackbar = Snackbar.make(imageToPdf.activityImageToPdfBinding.getRoot(),"",Snackbar.LENGTH_INDEFINITE);
 
         imageToPdf.activityImageToPdfBinding.list.setAdapter(null);
+
     }
 
 
@@ -48,47 +58,63 @@ public class ImageToPdfVM {
         if( snackbar!=null )
             snackbar.dismiss();
 
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        imageToPdf.startActivityForResult(intent, 1);
+        imageToPdf.changeLayout();
 
     }
 
+    public void openCamera(){
+
+        imageToPdf.changeLayout1();
+
+    }
+
+
+
     Intent data;
-    String fileNames[];
-    ArrayList<byte[] > imageList;
-    ArrayList<Bitmap> bitmapImages;
+
+    public ArrayList<byte[]> imageList = new ArrayList<>();
 
     Uri uri;
 
-    public void onActivityResult1(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult1(  int req , int res , Intent data ) {
 
-        try{
-            imageToPdf.activityImageToPdfBinding.list.setAdapter(null);
-        }catch (Exception e){}
+        if( req == 1 ){
 
-
-        if (requestCode == 1 && resultCode == imageToPdf.RESULT_OK && null != data) {
+            try{
+                imageToPdf.activityImageToPdfBinding.list.setAdapter(null);
+            }catch (Exception e){}
 
             if (data.getClipData() != null) {
                 this.data=data;
-
                 new LoadPdfTask().execute(true);
-
-            }else{
-                this.uri=data.getData();
-                new LoadPdfTask().execute(false);
-
             }
 
 
+        }else if( req == 2 ){
+
+            Set<String> list = imageToPdf.getSharedPreferences("LOCAL_DATA",MODE_PRIVATE).getStringSet("data",null);
+
+            for( String s : list ){
+
+                byte[] encodeByte = Base64.decode( s , Base64.DEFAULT);
+                InputStream inputStream = new ByteArrayInputStream(encodeByte);
+
+                Bitmap bitmap =  BitmapFactory.decodeStream(inputStream);
+
+                imageToPdf.imageList.add( bitmap );
+
+                imageList.add( encodeByte );
+
+            }
+
+            imageToPdf.createUI();
+            showConfirmPopup();
+
         }
 
-
-
     }
+
+
 
     public class LoadPdfTask extends AsyncTask<Boolean , Integer, Integer> {
 
@@ -100,12 +126,8 @@ public class ImageToPdfVM {
             super.onPreExecute();
 
             progressDialog = new ProgressDialog(imageToPdf);
-            progressDialog.setTitle("Loading Image files");
+            progressDialog.setTitle("Image loading progress");
             progressDialog.setMessage("Please wait.");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.setIndeterminate(false);
-            progressDialog.setMax(100);
-            progressDialog.setCancelable(true);
             progressDialog.show();
 
 
@@ -114,12 +136,9 @@ public class ImageToPdfVM {
         @Override
         protected Integer doInBackground(Boolean... b) {
 
-            bitmapImages=new ArrayList<>();
-            imageList=new ArrayList<>();
 
             if( b[0] ){
 
-                fileNames=new String[ data.getClipData().getItemCount() ];
 
                 try {
 
@@ -127,31 +146,28 @@ public class ImageToPdfVM {
                         Uri currentUri = data.getClipData().getItemAt(i).getUri();
 
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(imageToPdf.getContentResolver(), currentUri);
-                        bitmapImages.add(bitmap);
+                        imageToPdf.imageList.add(bitmap);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                         imageList.add(stream.toByteArray());
 
-                        fileNames[i]= DocumentCommon.getFileName(currentUri,imageToPdf);
-                        publishProgress(i);
                     }
                 } catch (Exception e) { System.out.println("Exception is : " + e); }
 
             }else{
 
-                fileNames=new String[ 1 ];
 
                 try {
 
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(imageToPdf.getContentResolver(), uri);
-                    bitmapImages.add(bitmap);
+                    imageToPdf.imageList.add(bitmap);
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     imageList.add(stream.toByteArray());
 
-                    fileNames[0]= DocumentCommon.getFileName(uri,imageToPdf);
+
                     publishProgress(0);
 
                 } catch (Exception e) { System.out.println("Exception is : " + e); }
@@ -164,33 +180,19 @@ public class ImageToPdfVM {
             return 1;
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-
-            super.onProgressUpdate(values);
-            this.progressDialog.setProgress(  ((values[0] + 1) * 100) /  fileNames.length );
-
-            StringBuilder sb = new StringBuilder();
-            sb.append( "Processing images (" );
-            sb.append( values[0] + 1   );
-            sb.append(  "/"  );
-            sb.append(  fileNames.length  );
-            sb.append(  ")"   );
-
-            progressDialog.setTitle(sb.toString());
-
-        }
 
         @Override
         protected void onPostExecute(Integer file) {
             super.onPostExecute(file);
             progressDialog.dismiss();
-            imageToPdf.createUI( bitmapImages );
+
+            imageToPdf.createUI(  );
+
             showConfirmPopup();
 
-
-            imageToPdf.activityImageToPdfBinding.mainLayout.removeView(imageToPdf.activityImageToPdfBinding.cardview);
         }
+
+
     }
 
 
@@ -216,7 +218,7 @@ public class ImageToPdfVM {
         customSnackView.findViewById(R.id.reselect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery();
+                imageToPdf.onBackPressed();
             }
         });
 
@@ -290,13 +292,13 @@ public class ImageToPdfVM {
         protected void onProgressUpdate(Integer... values) {
 
             super.onProgressUpdate(values);
-            this.progressDialog.setProgress(  ((values[0] + 1) * 100) /  fileNames.length );
+            this.progressDialog.setProgress(  ((values[0] + 1) * 100) /  imageList.size() );
 
             StringBuilder sb = new StringBuilder();
             sb.append( "Processing images (" );
             sb.append( values[0] + 1   );
             sb.append(  "/"  );
-            sb.append(  fileNames.length  );
+            sb.append(  imageList.size()  );
             sb.append(  ")"   );
 
             progressDialog.setTitle(sb.toString());
@@ -313,7 +315,9 @@ public class ImageToPdfVM {
             else
                 imageToPdf.toastMessage("pdf creation Failed.");
 
-            imageToPdf.onBackPressed();
+            imageToPdf.showAlert1();
+
+
         }
     }
 

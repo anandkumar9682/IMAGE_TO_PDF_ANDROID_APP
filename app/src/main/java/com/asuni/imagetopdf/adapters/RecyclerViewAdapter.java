@@ -1,29 +1,30 @@
 package com.asuni.imagetopdf.adapters;
 
-import android.content.Context;
-import android.content.Intent;
+
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.asuni.imagetopdf.R;
-import com.squareup.picasso.Picasso;
+import com.asuni.imagetopdf.views.ImageToPdf;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
-    private final Context context;
+    private final ImageToPdf imageToPdf;
     private final ArrayList<Bitmap> imagePathArrayList;
 
-    public RecyclerViewAdapter(Context context, ArrayList<Bitmap> imagePathArrayList) {
-        this.context = context;
+    public RecyclerViewAdapter(ImageToPdf imageToPdf, ArrayList<Bitmap> imagePathArrayList) {
+
+        this.imageToPdf = imageToPdf;
         this.imagePathArrayList = imagePathArrayList;
     }
 
@@ -37,14 +38,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
 
-        holder.imageIV.setImageBitmap( imagePathArrayList.get(position) );
+        holder.imageIV.setBackground( new BitmapDrawable( imagePathArrayList.get(position) ));
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        holder.deleteBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageToPdf.upDateUI( position );
+            }
+        });
 
-                }
-            });
+
 
     }
 
@@ -55,9 +58,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageIV;
+        private final ImageButton deleteBTN;
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageIV = itemView.findViewById(R.id.idIVImage);
+            imageIV = itemView.findViewById(R.id.image);
+            deleteBTN = itemView.findViewById(R.id.deleteBTN);
         }
+
     }
 }

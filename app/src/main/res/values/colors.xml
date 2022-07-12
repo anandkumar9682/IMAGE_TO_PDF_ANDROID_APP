@@ -4,6 +4,12 @@
     <color name="dark_blue">#A80A0A</color>
     <color name="light_blue">#CC1700</color>
 
+    <color name="red">#A80A0A</color>
+
+    <color name="green">#A1F61C00</color>
+
+    <color name="light_green">#CC1700</color>
+
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 

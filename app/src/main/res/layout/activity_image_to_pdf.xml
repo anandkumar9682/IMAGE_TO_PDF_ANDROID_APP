@@ -6,7 +6,7 @@
     <data>
         <variable
             name="ViewModel"
-            type="com.asuni.imagetopdf.viewmodels.ImageToPdfVM" />
+            type="com.asuni.imagetopdf.viewmodels.ImageToPdfVM2" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -14,155 +14,246 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="vertical"
+
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <com.google.android.material.appbar.AppBarLayout
-                android:background="@color/light_blue"
+            <LinearLayout
+                android:id="@+id/toolbarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="wrap_content"
+                android:padding="5dp">
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
+                <com.google.android.material.appbar.AppBarLayout
+                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:minHeight="?attr/actionBarSize">
+                    android:layout_height="50dp">
 
-                    <RelativeLayout
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:background="@drawable/shape_rd_20"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:minHeight="?attr/actionBarSize">
 
-                        <ImageButton
-                            android:id="@+id/menu_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/ic_menu" />
-
-                        <TextView
+                        <RelativeLayout
+                            android:layout_marginRight="15dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginHorizontal="40dp"
-                            android:layout_marginVertical="2dp"
-                            android:layout_toRightOf="@+id/menu_btn"
-                            android:gravity="center"
-                            android:text="IMAGE TO PDF"
-                            android:textColor="@color/white"
-                            android:textSize="30dp"
-                            android:textStyle="bold" />
+                            android:layout_height="match_parent">
 
-                    </RelativeLayout>
+                            <ImageButton
+                                android:id="@+id/menu_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/shape_rd_50"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_menu" />
 
-                </androidx.appcompat.widget.Toolbar>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_centerHorizontal="true"
+                                android:gravity="center"
+                                android:text="IMAGE to PDF"
+                                android:textColor="@color/white"
+                                android:textSize="30dp"
+                                android:textStyle="bold" />
 
-            </com.google.android.material.appbar.AppBarLayout>
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/shape_rd_50"
+                                android:onClick="@{()->ViewModel.openCamera()}"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_camera" />
 
-            <RelativeLayout
-                android:id="@+id/main_layout"
+                        </RelativeLayout>
+
+                    </androidx.appcompat.widget.Toolbar>
+
+
+                </com.google.android.material.appbar.AppBarLayout>
+
+
+
+            </LinearLayout>
+
+
+            <ScrollView
+                android:id="@+id/contentLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bottomText"
+                android:layout_below="@+id/toolbarLayout">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardview"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    app:cardUseCompatPadding="true"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="5dp"
-                    app:cardMaxElevation="5dp"
-                    app:cardBackgroundColor="@color/white">
+                <RelativeLayout
+                    android:id="@+id/main_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:id="@+id/cardview"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:gravity="center"
+                        android:layout_centerInParent="true"
                         android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:src="@drawable/image_gallery"/>
-
-                        <View
-                            android:layout_marginTop="10dp"
+                        <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
-                            android:layout_height="1dp"
-                            android:background="@color/black"/>
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="5dp"
+                            app:cardMaxElevation="5dp"
+                            app:cardUseCompatPadding="true">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <ImageView
+                                    android:layout_width="200dp"
+                                    android:layout_height="100dp"
+                                    android:src="@drawable/image_image_to_pdf" />
+
+                                <View
+                                    android:layout_width="200dp"
+                                    android:layout_height="1dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@color/black" />
 
 
-                        <Button
-                            android:layout_marginTop="10dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="35dp"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:background="@drawable/gradient1"
-                            android:onClick="@{()->ViewModel.openGallery()}"
-                            android:text="Choose Photo"/>
+                                <Button
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="35dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@drawable/shape_rect_fill_r30"
+                                    android:onClick="@{()->ViewModel.openGallery()}"
+                                    android:paddingHorizontal="20dp"
+                                    android:text="Open Gallary"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
 
+
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_centerHorizontal="true"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="5dp"
+                            app:cardMaxElevation="5dp"
+                            app:cardUseCompatPadding="true">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <ImageView
+                                    android:layout_width="200dp"
+                                    android:layout_height="100dp"
+                                    android:src="@drawable/camera_to_pdf" />
+
+                                <View
+                                    android:layout_width="200dp"
+                                    android:layout_height="1dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@color/black" />
+
+
+                                <Button
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="35dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@drawable/shape_rect_fill_r30"
+                                    android:onClick="@{()->ViewModel.openCamera()}"
+                                    android:paddingHorizontal="20dp"
+                                    android:text="Open Camera"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
 
-                </androidx.cardview.widget.CardView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:paddingHorizontal="5dp"
+                        android:paddingTop="5dp"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/list"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/bottom"
-                    android:layout_below="@+id/cardview"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:background="@drawable/rect1"
-                    android:paddingHorizontal="5dp"
-                    android:paddingTop="5dp" />
+            </ScrollView>
 
 
-                <TextView
-                    android:id="@+id/bottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/rect1"
-                    android:gravity="center"
-                    android:paddingVertical="3dp"
-                    android:text="Output ->Internal storage -> Image To PDF/"
-                    android:textAlignment="center"
-                    android:textColor="@color/light_blue"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/bottomText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/shape_rect"
+                android:gravity="center"
+                android:paddingVertical="3dp"
+                android:text="Output -> Internal storage -> IMAGE_TO_PDF/"
+                android:textAlignment="center"
+                android:textColor="@color/light_blue"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-            </RelativeLayout>
+        </RelativeLayout>
 
-        </LinearLayout>
+
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/white"
-            app:itemBackground="@drawable/rect1"
+            app:itemBackground="@drawable/shape_rect"
             android:shadowColor="@color/light_blue"
             app:itemTextColor="@color/light_blue"
             app:itemIconTint="@color/light_blue"
             app:headerLayout="@layout/vavigation_header"
             app:menu="@menu/menu_items"
             android:layout_gravity="start"/>
+
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

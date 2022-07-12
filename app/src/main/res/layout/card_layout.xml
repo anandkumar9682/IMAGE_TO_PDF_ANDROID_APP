@@ -9,11 +9,32 @@
     android:elevation="8dp"
     app:cardCornerRadius="8dp">
 
-    <ImageView
-        android:id="@+id/idIVImage"
+    <RelativeLayout
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop" >
+
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/deleteBTN"
+            android:padding="3dp"
+            android:layout_margin="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/shape_circle_fill_tr"
+            android:src="@drawable/ic_delete"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+
+
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

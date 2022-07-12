@@ -1,4 +1,4 @@
-package com.asuni.imagetopdf;
+package com.asuni.imagetopdf.aa;
 
 import android.os.Build;
 
@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.asuni.imagetopdf.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutionException;
@@ -36,8 +37,10 @@ public class DocumentCameraVM extends BaseObservable {
     DocumentCamera myCamera;
 
     boolean flash=false;
+
     CameraSelector cameraSelector;
     Camera camera;
+
     boolean focus=true;
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -80,7 +83,7 @@ public class DocumentCameraVM extends BaseObservable {
 
             imageView=new ImageView(myCamera);
 
-            imageView.setImageDrawable(myCamera.getDrawable(R.drawable.icon_focus_camera));
+            imageView.setImageDrawable(myCamera.getDrawable(R.drawable.ic_camera_focus));
             myCamera.previewView.addView(imageView,rel_bottone);
 
             new Handler().postDelayed(new Runnable() {
@@ -129,8 +132,10 @@ public class DocumentCameraVM extends BaseObservable {
     }
 
     public void flashBTN(){
-        flash= myCamera.flash(flash);
+        flash = myCamera.flash( flash );
     }
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void confirm(){
 
@@ -139,7 +144,7 @@ public class DocumentCameraVM extends BaseObservable {
     }
 
     public void imagePreview(){
-        myCamera.preview();
+//        myCamera.preview();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

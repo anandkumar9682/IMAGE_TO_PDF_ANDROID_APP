@@ -7,9 +7,14 @@
         android:id="@+id/show_us_love"/>
 
     <item
-        android:icon="@drawable/ic_contace"
+        android:icon="@drawable/ic_contact"
         android:title="Contact Us"
         android:id="@+id/contact_us"/>
+
+    <item
+        android:icon="@drawable/ic_privacy"
+        android:title="Privacy and Policy"
+        android:id="@+id/privacy_policy"/>
 
 
 </menu>

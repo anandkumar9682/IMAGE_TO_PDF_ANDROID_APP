@@ -1,5 +1,7 @@
 package com.asuni.imagetopdf.adapters;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -68,8 +70,51 @@ public class DocumentCommon {
 
 
     public static void setPermition(Activity activity) {
-        ActivityCompat.requestPermissions(activity , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+
+        String[] permitionName = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.INTERACT_ACROSS_PROFILES };
+
+
+        ActivityCompat.requestPermissions(activity ,  permitionName ,2);
+
+
     }
+
+
+    public static File saveImages( String folderName, Bitmap bitmap){
+        String imageFileName = "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory("IMAGE_TO_PDF/pdf to image/"+folderName);
+
+        if (!storageDir.exists())
+            new File(storageDir.getPath()).mkdirs();
+
+
+        File image=null;
+        try {
+            image= File.createTempFile(imageFileName, ".jpeg", storageDir);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(image));
+        } catch (Exception e1) {  }
+
+        return image;
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String convertBitmapToString(Bitmap bmp){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byte_arr = stream.toByteArray();
+        String imageStr = Base64.getEncoder().encodeToString(byte_arr);
+        return imageStr;
+    }
+
+
+
+
 
 
 }
